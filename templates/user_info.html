@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>user info</title>
+  </head>
+  <body>
+    <div style="position: absolute; top: 0; right: 0">
+      <form method="GET" action="{{ url_for('user_info') }}">
+        <input type="hidden" name="id" value="{{ id }}" />
+        <label for="user_id">ID: </label>
+        <input type="submit" name="user_id" value="{{ id }}" />
+      </form>
+      <form method="GET" action="{{ url_for('main') }}">
+        <input type="hidden" name="id" value="{{ id }}" />
+        <input type="submit" name="action" value="Main Page" />
+      </form>
+    </div>
+    <h1>This is {{ user_info[0] }} page</h1>
+    <!-- form only appear id != user_id -->
+    {% if id != user_info[0] %}
+    <form method="POST" action="{{ url_for('social_action') }}">
+      <input type="hidden" name="id" value="{{ id }}" />
+      <input type="hidden" name="user_id" value="{{ user_info[0] }}" />
+      <input type="submit" name="action" value="follow" />
+      <input type="submit" name="action" value="mute" />
+      <!-- print error message -->
+      {% if error %}
+      <p>{{ error }}</p>
+      {% endif %}
+    </form>
+    {% endif %}
+
+    <h1>Reviews</h1>
+    <table border="1">
+      <thead>
+        <th>ratings</th>
+        <th>movies</th>
+        <th>review</th>
+        <th>time</th>
+      </thead>
+
+      <tbody>
+        {% for review in reviews %}
+        <tr>
+          <td>{{ review[0] }}</td>
+          <td>
+            <form method="GET" action="{{ url_for('movie_info') }}">
+              <input type="hidden" name="id" value="{{ id }}" />
+              <input type="hidden" name="movie_id" value="{{ review[4] }}" />
+              <input type="submit" name="movie_name" value="{{ review[1] }}" />
+            </form>
+          </td>
+          <td>{{ review[2] }}</td>
+          <td>{{ review[3] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h1>Followers</h1>
+    <table border="1">
+      <thead>
+        <th>name</th>
+      </thead>
+
+      <tbody>
+        {% for follower in followers %}
+        <tr>
+          <td>
+            <form method="GET" action="{{ url_for('user_info') }}">
+              <input type="hidden" name="id" value="{{ id }}" />
+              <input type="submit" name="user_id" value="{{ follower[0] }}" />
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>

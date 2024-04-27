@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>movie info</title>
+  </head>
+  <body>
+    <div style="position: absolute; top: 0; right: 0">
+      <form method="GET" action="{{ url_for('user_info') }}">
+        <input type="hidden" name="id" value="{{ id }}" />
+        <label for="user_id">ID: </label>
+        <input type="submit" name="user_id" value="{{ id }}" />
+      </form>
+      <form method="GET" action="{{ url_for('main') }}">
+        <input type="hidden" name="id" value="{{ id }}" />
+        <input type="submit" name="action" value="Main Page" />
+      </form>
+    </div>
+    <h1>{{ movie_info[0] }}</h1>
+    <table border="1">
+      <thead>
+        <th>director</th>
+        <th>genre</th>
+        <th>release date</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ movie_info[1] }}</td>
+          <td>{{ movie_info[2] }}</td>
+          <td>{{ movie_info[3] }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <h1>Reviews</h1>
+    <h3>Average Rating: {{ avg_rating[0] }}</h3>
+    <table border="1">
+      <thead>
+        <th>ratings</th>
+        <th>user</th>
+        <th>review</th>
+        <th>time</th>
+      </thead>
+
+      <tbody>
+        {% for review in reviews %}
+        <tr>
+          <td>{{ review[0] }}</td>
+          <td>
+            <form method="GET" action="{{ url_for('user_info') }}">
+              <input type="hidden" name="id" value="{{ id }}" />
+              <input type="submit" name="user_id" value="{{ review[1] }}" />
+            </form>
+          </td>
+          <td>{{ review[2] }}</td>
+          <td>{{ review[3] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Form to write review -->
+    <form
+      method="POST"
+      action="{{ url_for('movie_info', id=id, movie_id=movie_info[4]) }}">
+      {{ movie_info[4] }}
+
+      <label for="rating">Rating: </label>
+      <select name="rating">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+      <label for="review">Review: </label>
+      <input type="text" name="review" value="" />
+      <input type="submit" name="action" value="submit" />
+    </form>
+  </body>
+</html>

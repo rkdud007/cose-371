@@ -1,25 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>main</title>
-</head>
-<body>
+  </head>
+  <body>
+    <div style="position: absolute; top: 0; right: 0">
+      <form method="GET" action="{{ url_for('user_info') }}">
+        <input type="hidden" name="id" value="{{ id }}" />
+        <label for="user_id">ID: </label>
+        <input type="submit" name="user_id" value="{{ id }}" />
+      </form>
+    </div>
+    <h1>Movies</h1>
+    <form method="GET" action="{{ url_for('main') }}">
+      <input type="hidden" name="id" value="{{ id }}" />
+      <input type="submit" name="movie_filter" value="latest" />
+      <input type="submit" name="movie_filter" value="genre" />
+      <input type="submit" name="movie_filter" value="ratings" />
+    </form>
+    <table border="1">
+      <thead>
+        <th>title</th>
+        <th>ratings</th>
+        <th>director</th>
+        <th>genre</th>
+        <th>release date</th>
+      </thead>
 
-<form action="/register" method="post">
-    <label for="user_id">ID:</label><br>
-    <input id="user_id" type="text" name="id" value=""><br>
+      <tbody>
+        {% for movie in movies %}
+        <tr>
+          <td>
+            <form method="GET" action="{{ url_for('movie_info') }}">
+              <input type="hidden" name="id" value="{{ id }}" />
+              <input type="hidden" name="movie_id" value="{{ movie[5] }}" />
+              <input type="submit" name="movie_name" value="{{ movie[0] }}" />
+            </form>
+          </td>
+          <td>{{ movie[1] }}</td>
+          <td>{{ movie[2] }}</td>
+          <td>{{ movie[3] }}</td>
+          <td>{{ movie[4] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 
-    <label for="user_pwd">PASSWORD:</label><br>
-    <input id="user_pwd" type="password" name="password" value=""><br><br>
+    <h1>Reviews</h1>
+    <form method="GET" action="{{ url_for('main') }}">
+      <input type="hidden" name="id" value="{{ id }}" />
+      <input type="submit" name="review_filter" value="latest" />
+      <input type="submit" name="review_filter" value="title" />
+      <input type="submit" name="review_filter" value="followers" />
+    </form>
+    <table border="1">
+      <thead>
+        <th>ratings</th>
+        <th>user</th>
+        <th>title</th>
+        <th>review</th>
+        <th>time</th>
+      </thead>
 
-    <input type="submit" name="send" value="login">
-    <input type="submit" name="send" value="sign up">
-</form>
-
-<form action="/print_table" method="post">
-    <input type="submit" name="send" value="print">
-</form>
-
-</body>
+      <tbody>
+        {% for review in reviews %}
+        <tr>
+          <td>{{ review[0] }}</td>
+          <td>
+            <form method="GET" action="{{ url_for('user_info') }}">
+              <input type="hidden" name="id" value="{{ id }}" />
+              <input type="submit" name="user_id" value="{{ review[1] }}" />
+            </form>
+          </td>
+          <td>
+            <form method="GET" action="{{ url_for('movie_info') }}">
+              <input type="hidden" name="id" value="{{ id }}" />
+              <input type="hidden" name="movie_id" value="{{ review[5] }}" />
+              <input type="submit" name="movie_name" value="{{ review[2] }}" />
+            </form>
+          </td>
+          <td>{{ review[3] }}</td>
+          <td>{{ review[4] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
 </html>
