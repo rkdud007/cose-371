@@ -18,6 +18,9 @@
 
       <input type="submit" name="send" value="sign in" />
       <input type="submit" name="send" value="sign up" />
+      {% if error %}
+      <p>{{ error }}</p>
+      {% endif %}
     </form>
   </body>
 </html>

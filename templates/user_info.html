@@ -38,6 +38,9 @@
         <th>movies</th>
         <th>review</th>
         <th>time</th>
+        {% if id == user_info[0] %}
+        <th>delete</th>
+        {% endif %}
       </thead>
 
       <tbody>
@@ -53,6 +56,15 @@
           </td>
           <td>{{ review[2] }}</td>
           <td>{{ review[3] }}</td>
+          {% if id == user_info[0] %}
+          <td>
+            <form method="POST" action="{{ url_for('delete_review') }}">
+              <input type="hidden" name="user_id" value="{{ id }}" />
+              <input type="hidden" name="movie_id" value="{{ review[4] }}" />
+              <input type="submit" name="action" value="delete" />
+            </form>
+          </td>
+          {% endif %}
         </tr>
         {% endfor %}
       </tbody>
@@ -63,7 +75,6 @@
       <thead>
         <th>name</th>
       </thead>
-
       <tbody>
         {% for follower in followers %}
         <tr>
@@ -77,5 +88,82 @@
         {% endfor %}
       </tbody>
     </table>
+
+    {% if id == user_info[0] and id != 'admin' %}
+    <h1>Followings</h1>
+    <table border="1">
+      <thead>
+        <th>name</th>
+        <th>unfollow</th>
+      </thead>
+      <tbody>
+        {% for following in followings %}
+        <tr>
+          <td>
+            <form method="GET" action="{{ url_for('user_info') }}">
+              <input type="hidden" name="id" value="{{ id }}" />
+              <input type="submit" name="user_id" value="{{ following[0] }}" />
+            </form>
+          </td>
+          <td>
+            <form method="POST" action="{{ url_for('social_action') }}">
+              <input type="hidden" name="id" value="{{ id }}" />
+              <input type="hidden" name="user_id" value="{{ following[0] }}" />
+              <input type="submit" name="action" value="unfollow" />
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h1>Muted</h1>
+    <table border="1">
+      <thead>
+        <th>name</th>
+        <th>unmute</th>
+      </thead>
+      <tbody>
+        {% for muted in muted %}
+        <tr>
+          <td>
+            <form method="GET" action="{{ url_for('user_info') }}">
+              <input type="hidden" name="id" value="{{ id }}" />
+              <input type="submit" name="user_id" value="{{ muted[0] }}" />
+            </form>
+          </td>
+          <td>
+            <form method="POST" action="{{ url_for('social_action') }}">
+              <input type="hidden" name="id" value="{{ id }}" />
+              <input type="hidden" name="user_id" value="{{ muted[0] }}" />
+              <input type="submit" name="action" value="unmute" />
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %} {% if id == 'admin' %}
+    <h1>Add Movie</h1>
+    <form method="POST" action="{{ url_for('add_movie') }}">
+      <input type="hidden" name="user_id" value="{{ id }}" />
+      <label for="title">Title: </label>
+      <input type="text" name="title" value="" />
+      <label for="director">Director: </label>
+      <input type="text" name="director" value="" />
+      <label for="genre">Genre: </label>
+      <select name="genre">
+        <option value="action">Action</option>
+        <option value="comedy">Comedy</option>
+        <option value="drama">Drama</option>
+        <option value="horror">Horror</option>
+        <option value="romance">Romance</option>
+        <option value="thriller">Thriller</option>
+      </select>
+      <label for="rel_date">Release Date: </label>
+      <input type="date" name="rel_date" value="" />
+      <input type="submit" name="action" value="add" />
+    </form>
+    {% endif %}
   </body>
 </html>
